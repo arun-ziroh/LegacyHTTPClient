@@ -20,6 +20,24 @@ public struct HTTPRequest: Sendable {
     
     public var url: URL? { urlComponents.url }
     
+    private var options = [ObjectIdentifier: any Sendable]()
+    
+    public subscript<O: HTTPRequestOption>(option type: O.Type) -> O.Value {
+        get {
+            let id = ObjectIdentifier(type)
+            
+            guard let value = options[id] as? O.Value else {
+                return type.defaultValue
+            }
+            
+            return value
+        }
+        set {
+            let id = ObjectIdentifier(type)
+            options[id] = newValue
+        }
+    }
+    
     public init() {
         urlComponents.scheme = "https"
     }
@@ -37,5 +55,13 @@ public extension HTTPRequest {
     var path: String {
         get { urlComponents.path }
         set { urlComponents.path = newValue }
+    }
+}
+
+public extension HTTPRequest {
+    
+    var serverEnvironment: ServerEnvironment? {
+        get { self[option: ServerEnvironment.self] }
+        set { self[option: ServerEnvironment.self] = newValue }
     }
 }
