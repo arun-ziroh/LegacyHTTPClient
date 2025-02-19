@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct ServerEnvironment: HTTPRequestOption, Sendable {
+public struct ServerEnvironment: Sendable {
     
     public static let defaultOptionValue: ServerEnvironment? = nil
     
@@ -26,8 +26,12 @@ public struct ServerEnvironment: HTTPRequestOption, Sendable {
 
 extension ServerEnvironment {
     
-    public static let developemnt = ServerEnvironment(host: "development.example.com", pathPrefix: "/api-dev")
+    public static let development = ServerEnvironment(host: "development.example.com", pathPrefix: "/api-dev")
     public static let qa = ServerEnvironment(host: "qa.example.com", pathPrefix: "/api")
     public static let staging = ServerEnvironment(host: "staging.example.com", pathPrefix: "/api")
     public static let production = ServerEnvironment(host: "example.com", pathPrefix: "/api")
+}
+
+extension ServerEnvironment: HTTPRequestOption {
+    public static let defaultValue: ServerEnvironment? = nil
 }

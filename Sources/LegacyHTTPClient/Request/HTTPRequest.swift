@@ -20,17 +20,17 @@ public struct HTTPRequest: Sendable {
     
     public var url: URL? { urlComponents.url }
     
+    private var options = [ObjectIdentifier: any Sendable]()
+    
     public init() {
         urlComponents.scheme = "https"
     }
-    
-    private var options = [ObjectIdentifier: any Sendable]()
     
     public subscript<O: HTTPRequestOption>(option type: O.Type) -> O.Value {
         get {
             let id = ObjectIdentifier(type)
             
-            guard let value = options[id] as? O.Value else { return type.defaultOptionValue }
+            guard let value = options[id] as? O.Value else { return type.defaultValue }
             
             return value
         }

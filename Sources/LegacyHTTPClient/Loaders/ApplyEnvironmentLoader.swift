@@ -9,28 +9,29 @@ import Foundation
 
 public class ApplyEnvironmentLoader: HTTPLoader {
     
-    private let serverEnvironment: ServerEnvironment
+    private let serverEnviornment: ServerEnvironment?
     
-    public init(serverEnvironment: ServerEnvironment) {
-        self.serverEnvironment = serverEnvironment
-        super.init()
+    public init(serverEnviornment: ServerEnvironment? = nil) {
+        self.serverEnviornment = serverEnviornment
     }
     
     override public func load(request: HTTPRequest, completion: @escaping @Sendable (HTTPResult) -> Void) {
         var copy = request
         
-        let requestEnvironment = request.serverEnvironment ?? serverEnvironment
+        let requestEnvironment = copy.serverEnvironment ?? serverEnviornment
         
-        if copy.host.isEmpty {
-            copy.host = requestEnvironment.host
-        }
-        
-        if copy.path.hasPrefix("/") == false {
-            copy.path = requestEnvironment.pathPrefix + copy.path
-        }
-        
-        for (header, value) in requestEnvironment.headers {
-            copy.headers[header] = value
+        if let requestEnvironment {
+            if copy.host.isEmpty {
+                copy.host = requestEnvironment.host
+            }
+            
+            if copy.path.hasPrefix("/") == false {
+                copy.path = requestEnvironment.pathPrefix + "/" + copy.path
+            }
+            
+            for (header, value) in requestEnvironment.headers {
+                copy.headers[header] = value
+            }
         }
         
         super.load(request: copy, completion: completion)
