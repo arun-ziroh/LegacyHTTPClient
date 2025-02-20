@@ -27,4 +27,17 @@ open class HTTPLoader {
             completion(.failure(error))
         }
     }
+    
+    open func reset(with group: DispatchGroup) {
+        nextLoader?.reset(with: group)
+    }
+}
+
+extension HTTPLoader {
+    
+    public final func reset(on queue: DispatchQueue = .main, completionHandler: @escaping @Sendable () -> Void) {
+        let group = DispatchGroup()
+        self.reset(with: group)
+        group.notify(queue: queue, execute: completionHandler)
+    }
 }

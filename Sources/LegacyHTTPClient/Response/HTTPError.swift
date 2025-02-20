@@ -35,6 +35,7 @@ extension HTTPError {
         case cancelled
         case insecureConnection
         case invalidResponse
+        case resetInProgress
         case unknown
     }
 }
