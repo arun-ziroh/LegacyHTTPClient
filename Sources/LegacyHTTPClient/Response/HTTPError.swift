@@ -29,6 +29,7 @@ extension HTTPError {
     
     public enum Code: Sendable {
         case invalidRequest
+        case cannotConnect
         case cannotConnectToHost
         case notConntectedToInternet
         case connectionLost

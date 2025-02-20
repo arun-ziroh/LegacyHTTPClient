@@ -23,7 +23,7 @@ public class ResetGuardLoader: HTTPLoader, @unchecked Sendable {
     
     public override func reset(with group: DispatchGroup) {
         if isResetting {
-            print("Resetting is inProgress")
+            print("Resetting is already in progress.")
             return
         }
         

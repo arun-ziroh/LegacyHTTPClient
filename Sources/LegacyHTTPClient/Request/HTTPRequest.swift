@@ -9,6 +9,8 @@ import Foundation
 
 public struct HTTPRequest: Sendable {
     
+    let id = UUID()
+    
     private var urlComponents: URLComponents = .init()
     
     public var httpMethod: HTTPMethod = .get

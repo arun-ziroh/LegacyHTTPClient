@@ -7,7 +7,7 @@
 
 import Foundation
 
-// TODO: Author wants to encapsulte common some logic so he replaced HTTPLoading Protocol with this class.
+// TODO: Author wants to encapsulte some common logic so he replaced HTTPLoading Protocol with this class.
 open class HTTPLoader {
     
     public var nextLoader: HTTPLoader? {
@@ -18,13 +18,12 @@ open class HTTPLoader {
     
     public init() { }
     
-    open func load(request: HTTPRequest, completion: @escaping @Sendable (HTTPResult) -> Void) {
+    open func load(task: HTTPTask) {
         if let nextLoader {
-            nextLoader.load(request: request, completion: completion)
+            nextLoader.load(task: task)
         }
         else {
-            let error = HTTPError(code: .invalidRequest, request: request, response: nil, underlyingError: nil)
-            completion(.failure(error))
+            task.fail(code: .cannotConnect)
         }
     }
     
@@ -34,6 +33,12 @@ open class HTTPLoader {
 }
 
 extension HTTPLoader {
+    
+    public func load(request: HTTPRequest, completion: @escaping @Sendable (HTTPResult) -> Void) -> HTTPTask {
+        let task = HTTPTask(request: request, completion: completion)
+        self.load(task: task)
+        return task
+    }
     
     public final func reset(on queue: DispatchQueue = .main, completionHandler: @escaping @Sendable () -> Void) {
         let group = DispatchGroup()
