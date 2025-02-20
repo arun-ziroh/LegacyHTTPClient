@@ -60,7 +60,6 @@ final class ResetStarWarsAPITests: XCTestCase, @unchecked Sendable {
         
         sut.requestPeople(with: serverEnvironment) { result, _  in
             if let responseBody = result {
-                
                 if responseBody.count == mock?.count {
                     self.loader.reset {
                         print("Reset Success !!")

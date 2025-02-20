@@ -10,6 +10,13 @@ import Foundation
 
 final class CustomPrintLoader: PrintLoader {
     
+    override func load(request: HTTPRequest, completion: @escaping @Sendable (HTTPResult) -> Void) {
+        super.load(request: request) { result in
+            print("\(Self.self) load Called")
+            completion(result)
+        }
+    }
+    
     override func reset(with group: DispatchGroup) {
         group.enter()
         

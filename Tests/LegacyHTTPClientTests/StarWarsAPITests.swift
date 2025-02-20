@@ -17,7 +17,20 @@ final class StarWarsAPITests: XCTestCase {
     
     override func setUp() {
         mockLoader = MockLoader()
-        sut = StarWarsAPI(loader: mockLoader)
+        let loader = ModifyRequestLoader { request in
+            var copy = request
+            
+            if copy.host.isEmpty {
+                copy.host = "swapi.dev"
+            }
+            
+            if copy.path.starts(with: "/api/") == false {
+                copy.path = "/api/" + copy.path
+            }
+            
+            return copy
+        } --> mockLoader
+        sut = StarWarsAPI(loader: loader)
     }
     
     override func tearDown() {
