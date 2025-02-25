@@ -50,6 +50,7 @@ extension HTTPError.Code {
         case .notConnectedToInternet: self = .notConntectedToInternet
         case .badServerResponse: self = .invalidResponse
         case .networkConnectionLost: self = .connectionLost
+        case .cancelled: self = .cancelled
         default: self = .unknown
         }
     }

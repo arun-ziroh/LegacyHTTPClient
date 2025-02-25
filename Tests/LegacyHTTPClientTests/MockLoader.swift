@@ -8,26 +8,25 @@
 import Foundation
 @testable import LegacyHTTPClient
 
-class MockLoader: HTTPLoader {
+final class MockLoader: HTTPLoader {
     
     typealias HTTPHandler = (HTTPResult) -> Void
-    
     typealias MockHandler = (HTTPRequest, HTTPHandler) -> Void
     
     private var handlers = [MockHandler]()
     
-    override func load(request: HTTPRequest, completion: @escaping @Sendable HTTPHandler) {
+    override func load(task: HTTPTask) {
         if handlers.isEmpty == false {
-            let next = handlers.removeFirst()
-            next(request, completion)
+            let handler = handlers.removeFirst()
+            handler(task.request, task.complete(with:))
         }
         else {
-            completion(.failure(HTTPError(code: .unknown, request: request, response: nil, underlyingError: nil)))
+            task.fail(code: .unknown)
         }
     }
     
     @discardableResult
-    func then(_ handler: @escaping MockHandler) -> Self {
+    func add(_ handler: @escaping MockHandler) -> Self {
         handlers.append(handler)
         return self
     }

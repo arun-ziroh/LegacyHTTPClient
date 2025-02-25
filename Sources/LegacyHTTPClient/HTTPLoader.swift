@@ -34,6 +34,7 @@ open class HTTPLoader {
 
 extension HTTPLoader {
     
+    @discardableResult
     public func load(request: HTTPRequest, completion: @escaping @Sendable (HTTPResult) -> Void) -> HTTPTask {
         let task = HTTPTask(request: request, completion: completion)
         self.load(task: task)

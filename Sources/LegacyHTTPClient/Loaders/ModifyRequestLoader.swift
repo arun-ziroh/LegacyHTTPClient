@@ -16,8 +16,9 @@ public class ModifyRequestLoader: HTTPLoader {
         super.init()
     }
     
-    override public func load(request: HTTPRequest, completion: @escaping @Sendable (HTTPResult) -> Void) {
-        let modifiedRequest = modifier(request)
-        super.load(request: modifiedRequest, completion: completion)
+    override public func load(task: HTTPTask) {
+        let modifiedRequest = modifier(task.request)
+        task.modify(request: modifiedRequest)
+        super.load(task: task)
     }
 }

@@ -37,7 +37,7 @@ final class ResetStarWarsAPITests: XCTestCase, @unchecked Sendable {
         
         let mock = PeopleListResponse.getMock()
 
-        mockLoader.then { request, handler in
+        mockLoader.add { request, handler in
             XCTAssertEqual(request.host, serverEnvironment.host)
             XCTAssertEqual(request.path, serverEnvironment.pathPrefix + "/" + endpoint)
             

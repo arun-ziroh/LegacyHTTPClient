@@ -11,13 +11,12 @@ public class ResetGuardLoader: HTTPLoader, @unchecked Sendable {
     
     public var isResetting = false
     
-    public override func load(request: HTTPRequest, completion: @escaping @Sendable (HTTPResult) -> Void) {
+    override public func load(task: HTTPTask) {
         if isResetting == false {
-            super.load(request: request, completion: completion)
+            super.load(task: task)
         }
         else {
-            let error = HTTPError(code: .resetInProgress, request: request)
-            completion(.failure(error))
+            task.fail(code: .resetInProgress)
         }
     }
     

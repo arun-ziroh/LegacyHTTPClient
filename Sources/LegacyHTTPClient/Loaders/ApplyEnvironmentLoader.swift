@@ -15,25 +15,25 @@ public class ApplyEnvironmentLoader: HTTPLoader {
         self.serverEnviornment = serverEnviornment
     }
     
-    override public func load(request: HTTPRequest, completion: @escaping @Sendable (HTTPResult) -> Void) {
-        var copy = request
+    public override func load(task: HTTPTask) {
+        var copy = task.request
         
-        let requestEnvironment = copy.serverEnvironment ?? serverEnviornment
+        let env = copy.serverEnvironment ?? serverEnviornment
         
-        if let requestEnvironment {
+        if let env {
             if copy.host.isEmpty {
-                copy.host = requestEnvironment.host
+                copy.host = env.host
             }
             
             if copy.path.hasPrefix("/") == false {
-                copy.path = requestEnvironment.pathPrefix + "/" + copy.path
+                copy.path = env.pathPrefix + "/" + copy.path
             }
             
-            for (header, value) in requestEnvironment.headers {
+            for (header, value) in env.headers {
                 copy.headers[header] = value
             }
         }
-        
-        super.load(request: copy, completion: completion)
+        task.modify(request: copy)
+        super.load(task: task)
     }
 }

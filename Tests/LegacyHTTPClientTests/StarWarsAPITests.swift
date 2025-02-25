@@ -45,7 +45,7 @@ final class StarWarsAPITests: XCTestCase {
         
         let mock = PeopleListResponse.getMock()
 
-        mockLoader.then { request, handler in
+        mockLoader.add { request, handler in
             XCTAssertEqual(request.host, httpRequest.host)
             XCTAssertEqual(request.path, httpRequest.path)
             
@@ -84,7 +84,7 @@ final class StarWarsAPITests: XCTestCase {
         httpRequest.host = "swapi.dev"
         httpRequest.path = "/api/people"
 
-        mockLoader.then { request, handler in
+        mockLoader.add { request, handler in
             XCTAssertEqual(request.host, httpRequest.host)
             XCTAssertEqual(request.path, httpRequest.path)
             
@@ -120,7 +120,7 @@ final class StarWarsAPITests: XCTestCase {
         httpRequest.host = "swapi.dev"
         httpRequest.path = "/api/people"
 
-        mockLoader.then { request, handler in
+        mockLoader.add { request, handler in
             XCTAssertEqual(request.host, httpRequest.host)
             XCTAssertEqual(request.path, httpRequest.path)
             

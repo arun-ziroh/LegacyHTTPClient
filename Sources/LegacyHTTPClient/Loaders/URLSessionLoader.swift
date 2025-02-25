@@ -15,18 +15,11 @@ public class URLSessionLoader: HTTPLoader {
         self.session = session
     }
     
-    override public func load(request: HTTPRequest, completion: @escaping @Sendable (HTTPResult) -> Void) {
+    override public func load(task: HTTPTask) {
+        let request = task.request
+        
         guard let url = request.url else {
-            completion(
-                .failure(
-                    .init(
-                        code: .invalidRequest,
-                        request: request,
-                        response: .init(request: request, urlResponse: .init(), body: nil),
-                        underlyingError: nil
-                    )
-                )
-            )
+            task.fail(code: .invalidRequest)
             return
         }
         
@@ -43,16 +36,7 @@ public class URLSessionLoader: HTTPLoader {
             }
             catch {
                 print("Failed to encode body: \(error.localizedDescription)")
-                completion(
-                    .failure(
-                        .init(
-                            code: .invalidRequest,
-                            request: request,
-                            response: .init(request: request, urlResponse: .init(), body: nil),
-                            underlyingError: error
-                        )
-                    )
-                )
+                task.fail(code: .invalidRequest)
                 return
             }
         }
@@ -60,8 +44,10 @@ public class URLSessionLoader: HTTPLoader {
 
         let dataTask = session.dataTask(with: urlRequest) { data, urlResponse, error in
             let result = HTTPResult(request: request, urlResponse: urlResponse, body: data, error: error)
-            completion(result)
+            task.complete(with: result)
         }
+        
+        task.addCancellationHandler { dataTask.cancel() }
         
         dataTask.resume()
     }
